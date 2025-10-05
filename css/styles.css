@@ -11797,17 +11797,33 @@ body {
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
     margin-bottom: 20px;
 }
-
-/* Main Balance Card */
-.main-balance-card {
-    background-color: var(--primary-blue);
-    color: var(--main-balance-text-color);
-    padding: 30px 25px;
+/* --- Global Variables (Define these at the top if possible) --- */
+:root {
+    --primary-blue: #007bff; /* Used for the main card background */
+    --progress-bar-color: #2c3e50; /* Dark color for progress bar and icons */
+    --text-dark: #1f2937;
+    --text-medium: #6b7280;
 }
 
-.main-balance-card p:first-child {
-    font-size: 0.9rem;
-    margin-bottom: 5px;
+/* --- Base Card Styles --- */
+.card {
+    background-color: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+}
+
+/* --- Main Balance Card --- */
+.main-balance-card {
+    background-color: var(--primary-blue);
+    color: white;
+    padding: 25px;
+    margin-bottom: 20px;
+}
+
+.main-balance-card h2 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin: 0;
 }
 
 .balance-details {
@@ -11817,37 +11833,34 @@ body {
     margin-bottom: 15px;
 }
 
-.balance-details h2 {
-    font-size: 2.2rem;
-    font-weight: 700;
-    letter-spacing: -0.5px;
-}
-
-.balance-details i {
-    font-size: 1.8rem;
-    align-self: flex-start; /* Aligns the icon to the top of the flex container */
-}
-
 .contribution {
     font-size: 0.85rem;
     opacity: 0.8;
 }
 
 .contribution-amount {
-    font-size: 1.1rem;
-    font-weight: 500;
-    margin-top: 2px;
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin-top: 5px;
 }
 
-/* Secondary Cards Container */
+.user-pct {
+    display: block; 
+    font-size: 0.8rem;
+    font-weight: 400;
+    opacity: 0.9;
+    margin-top: 5px;
+}
+
+/* --- Secondary Cards Layout (2 columns) --- */
 .secondary-cards-container {
-    display: flex;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* 2 equal columns */
     gap: 15px;
     margin-bottom: 20px;
 }
 
 .secondary-card {
-    flex: 1;
     padding: 15px;
 }
 
@@ -11861,13 +11874,9 @@ body {
     font-size: 1.5rem;
 }
 
-.icon-blue {
-    color: var(--primary-blue);
-}
-
-.icon-green {
-    color: var(--progress-bar-color);
-}
+.icon-blue { color: var(--primary-blue); }
+.icon-green { color: #00A693; } /* Use a solid green for meeting icon */
+.icon-orange { color: #F9A825; } /* Used for Payout/Clock icon */
 
 .secondary-card p {
     font-size: 0.8rem;
@@ -11880,9 +11889,10 @@ body {
     color: var(--text-dark);
 }
 
-/* Progress Card */
+/* --- Progress Card --- */
 .progress-card {
     padding: 20px;
+    margin-bottom: 20px;
 }
 
 .progress-header {
@@ -11895,6 +11905,8 @@ body {
 .progress-header h3 {
     font-size: 1.1rem;
     font-weight: 600;
+    margin: 0;
+    color: var(--text-dark);
 }
 
 .progress-percentage {
@@ -11913,8 +11925,8 @@ body {
 
 .progress-bar {
     height: 100%;
-    background-color: var(--text-dark); /* Dark bar as per image */
-    width: 0%; /* Will be set by JavaScript */
+    background-color: var(--progress-bar-color); 
+    width: 0%; 
     transition: width 0.5s ease-in-out;
     border-radius: 10px;
 }
@@ -11932,4 +11944,87 @@ body {
     font-size: 0.85rem;
     color: var(--text-medium);
     font-weight: 400;
+}
+
+/* --- Warning Banner (Styles added/updated) --- */
+.warning-alert {
+    background-color:rgb(255, 102, 102); /* Light yellow background */
+    border: 2px solid red; /* Orange border */
+    padding: 15px 20px;
+    margin-top: 20px;
+    box-shadow: none;
+    display: none; /* Initially hidden, controlled by JS */
+}
+
+.alert-content {
+    display: flex;
+    align-items: flex-start; /* Align icon to the top of text block */
+    gap: 15px;
+}
+
+/* New: Style for the toggle button */
+.view-details-toggle {
+    background: none;
+    border: none;
+    padding: 0;
+    font-size: 0.9rem;
+    color: BLACK; /* Darker orange color */
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 5px;
+    transition: color 0.2s;
+    display: block;
+}
+
+.view-details-toggle:hover {
+    color: Black; 
+}
+
+/* New: Styles for the dropdown list */
+.missed-members-list {
+    list-style: none;
+    padding: 0;
+    margin-top: 15px;
+    margin-bottom: 0;
+     /* Separator line */
+    padding-top: 10px;
+    /* This class controls visibility, initially hidden in JS */
+}
+
+.missed-members-list li {
+    font-size: 0.9rem;
+    padding: 5px 0;
+    color: var(--text-dark);
+    display: flex;
+    justify-content: space-between;
+}
+
+.missed-members-list li:last-child {
+    border-bottom: none;
+}
+
+.alert-content {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.alert-icon {
+    color: #F9A825; /* Warning orange icon */
+    font-size: 1.8rem;
+}
+
+.alert-text {
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: var(--text-dark);
+    margin: 0;
+}
+
+.view-details {
+    font-size: 0.9rem;
+    color: #E36D0B; 
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 3px;
 }
