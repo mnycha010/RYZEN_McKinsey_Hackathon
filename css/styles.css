@@ -11732,3 +11732,204 @@ html {
     left: -2vw;
   }
 }
+
+:root {
+    /* Define colors from the design */
+    --primary-blue: #0A67E0;
+    --background-light: #F9FAFB;
+    --text-dark: #1F2937;
+    --text-medium: #4B5563;
+    --card-bg-light: #FFFFFF;
+    --progress-bar-color: #16A34A; /* A nice green for progress */
+
+    /* Data for automation (used in JS, but good to keep color logic here) */
+    --main-balance-text-color: #FFFFFF;
+}
+
+/* Base Styles */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: var(--background-light);
+    color: var(--text-dark);
+    padding: 20px;
+}
+
+.dashboard-container {
+    max-width: 450px; /* Suitable for an app-like or single-column layout */
+    margin: 0 auto;
+}
+
+/* Header */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.header h1 {
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+.group-name {
+    color: var(--text-medium);
+    font-size: 0.9rem;
+    font-weight: 400;
+}
+
+.notification-icon {
+    font-size: 1.4rem;
+    color: var(--text-medium);
+}
+
+/* Card General Styling */
+.card {
+    background-color: var(--card-bg-light);
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    margin-bottom: 20px;
+}
+
+/* Main Balance Card */
+.main-balance-card {
+    background-color: var(--primary-blue);
+    color: var(--main-balance-text-color);
+    padding: 30px 25px;
+}
+
+.main-balance-card p:first-child {
+    font-size: 0.9rem;
+    margin-bottom: 5px;
+}
+
+.balance-details {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.balance-details h2 {
+    font-size: 2.2rem;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+}
+
+.balance-details i {
+    font-size: 1.8rem;
+    align-self: flex-start; /* Aligns the icon to the top of the flex container */
+}
+
+.contribution {
+    font-size: 0.85rem;
+    opacity: 0.8;
+}
+
+.contribution-amount {
+    font-size: 1.1rem;
+    font-weight: 500;
+    margin-top: 2px;
+}
+
+/* Secondary Cards Container */
+.secondary-cards-container {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.secondary-card {
+    flex: 1;
+    padding: 15px;
+}
+
+.card-content {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.card-content i {
+    font-size: 1.5rem;
+}
+
+.icon-blue {
+    color: var(--primary-blue);
+}
+
+.icon-green {
+    color: var(--progress-bar-color);
+}
+
+.secondary-card p {
+    font-size: 0.8rem;
+    color: var(--text-medium);
+}
+
+.card-value {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--text-dark);
+}
+
+/* Progress Card */
+.progress-card {
+    padding: 20px;
+}
+
+.progress-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.progress-header h3 {
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+.progress-percentage {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--progress-bar-color);
+}
+
+.progress-bar-container {
+    background-color: #E5E7EB; /* Light grey track */
+    border-radius: 10px;
+    height: 10px;
+    overflow: hidden;
+    margin-bottom: 8px;
+}
+
+.progress-bar {
+    height: 100%;
+    background-color: var(--text-dark); /* Dark bar as per image */
+    width: 0%; /* Will be set by JavaScript */
+    transition: width 0.5s ease-in-out;
+    border-radius: 10px;
+}
+
+.progress-amounts {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--text-medium);
+    margin-bottom: 5px;
+}
+
+.remaining {
+    font-size: 0.85rem;
+    color: var(--text-medium);
+    font-weight: 400;
+}
