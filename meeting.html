@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stokvel Meeting Management</title>
+    <style>
+        :root {
+            --primary-color: #2c5aa0;
+            --secondary-color: #f8b500;
+            --light-color: #f4f4f4;
+            --dark-color: #333;
+            --success-color: #28a745;
+            --danger-color: #dc3545;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f0f2f5;
+            color: var(--dark-color);
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background: linear-gradient(135deg, var(--primary-color), #1e3a8a);
+            color: white;
+            padding: 20px 0;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .logo-icon {
+            font-size: 2.5rem;
+        }
+        
+        h1 {
+            font-size: 2.2rem;
+            margin-bottom: 5px;
+        }
+        
+        .subtitle {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+        
+        .meeting-info {
+            background-color: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: 8px;
+            text-align: right;
+        }
+        
+        .meeting-date {
+            font-size: 1.3rem;
+            font-weight: bold;
+        }
+        
+        .meeting-location {
+            font-size: 1rem;
+            margin-top: 5px;
+        }
+        
+        .tabs {
+            display: flex;
+            background-color: white;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        
+        .tab {
+            flex: 1;
+            padding: 15px 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+        
+        .tab:hover {
+            background-color: #f0f0f0;
+        }
+        
+        .tab.active {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        .tab-content {
+            display: none;
+            background-color: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        h2 {
+            color: var(--primary-color);
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--light-color);
+        }
+        
+        .agenda-item, .minute-item {
+            display: flex;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .agenda-checkbox, .minute-checkbox {
+            margin-right: 15px;
+            margin-top: 5px;
+        }
+        
+        .agenda-details, .minute-details {
+            flex: 1;
+        }
+        
+        .agenda-title, .minute-title {
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        
+        .agenda-description, .minute-description {
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        .agenda-time, .minute-time {
+            color: var(--primary-color);
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--dark-color);
+        }
+        
+        input, textarea, select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+        
+        textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+        
+        .btn {
+            display: inline-block;
+            background-color: var(--primary-color);
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: background-color 0.3s;
+        }
+        
+        .btn:hover {
+            background-color: #1e3a8a;
+        }
+        
+        .btn-secondary {
+            background-color: var(--secondary-color);
+            color: var(--dark-color);
+        }
+        
+        .btn-secondary:hover {
+            background-color: #e6a500;
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            padding: 20px;
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                text-align: center;
+                gap: 15px;
+            }
+            
+            .meeting-info {
+                text-align: center;
+            }
+            
+            .tabs {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="header-content">
+                <div class="logo">
+                    <div class="logo-icon">💰</div>
+                    <div>
+                        <h1>Stokvel Meeting Manager</h1>
+                        <div class="subtitle">Managing our collective savings and investments</div>
+                    </div>
+                </div>
+                <div class="meeting-info">
+                    <div class="meeting-date">October 15, 2023</div>
+                    <div class="meeting-location">Community Hall, Johannesburg</div>
+                </div>
+            </div>
+        </header>
+        
+        <div class="tabs">
+            <div class="tab active" data-tab="agenda">Meeting Agenda</div>
+            <div class="tab" data-tab="minutes">Meeting Minutes</div>
+            <div class="tab" data-tab="next-meeting">Next Meeting</div>
+            <div class="tab" data-tab="members">Add Member</div>
+        </div>
+        
+        <div id="agenda" class="tab-content active">
+            <h2>Meeting Agenda</h2>
+            <div class="agenda-list">
+                <div class="agenda-item">
+                    <div class="agenda-checkbox">
+                        <input type="checkbox" id="agenda1">
+                    </div>
+                    <div class="agenda-details">
+                        <div class="agenda-title">Opening and Welcome</div>
+                        <div class="agenda-description">Chairperson opens the meeting and welcomes all members</div>
+                        <div class="agenda-time">10 mins</div>
+                    </div>
+                </div>
+                
+                <div class="agenda-item">
+                    <div class="agenda-checkbox">
+                        <input type="checkbox" id="agenda2">
+                    </div>
+                    <div class="agenda-details">
+                        <div class="agenda-title">Attendance and Apologies</div>
+                        <div class="agenda-description">Record attendance and note apologies from absent members</div>
+                        <div class="agenda-time">5 mins</div>
+                    </div>
+                </div>
+                
+                <div class="agenda-item">
+                    <div class="agenda-checkbox">
+                        <input type="checkbox" id="agenda3">
+                    </div>
+                    <div class="agenda-details">
+                        <div class="agenda-title">Review of Previous Minutes</div>
+                        <div class="agenda-description">Discuss and approve minutes from the last meeting</div>
+                        <div class="agenda-time">15 mins</div>
+                    </div>
+                </div>
+                
+                <div class="agenda-item">
+                    <div class="agenda-checkbox">
+                        <input type="checkbox" id="agenda4">
+                    </div>
+                    <div class="agenda-details">
+                        <div class="agenda-title">Financial Report</div>
+                        <div class="agenda-description">Treasurer presents current financial status and collections</div>
+                        <div class="agenda-time">20 mins</div>
+                    </div>
+                </div>
+                
+                <div class="agenda-item">
+                    <div class="agenda-checkbox">
+                        <input type="checkbox" id="agenda5">
+                    </div>
+                    <div class="agenda-details">
+                        <div class="agenda-title">Member Payout Discussion</div>
+                        <div class="agenda-description">Decide on next member to receive payout and amount</div>
+                        <div class="agenda-time">25 mins</div>
+                    </div>
+                </div>
+                
+                <div class="agenda-item">
+                    <div class="agenda-checkbox">
+                        <input type="checkbox" id="agenda6">
+                    </div>
+                    <div class="agenda-details">
+                        <div class="agenda-title">Investment Opportunities</div>
+                        <div class="agenda-description">Discuss potential investment options for stokvel funds</div>
+                        <div class="agenda-time">20 mins</div>
+                    </div>
+                </div>
+                
+                <div class="agenda-item">
+                    <div class="agenda-checkbox">
+                        <input type="checkbox" id="agenda7">
+                    </div>
+                    <div class="agenda-details">
+                        <div class="agenda-title">Any Other Business</div>
+                        <div class="agenda-description">Open floor for any additional matters from members</div>
+                        <div class="agenda-time">15 mins</div>
+                    </div>
+                </div>
+                
+                <div class="agenda-item">
+                    <div class="agenda-checkbox">
+                        <input type="checkbox" id="agenda8">
+                    </div>
+                    <div class="agenda-details">
+                        <div class="agenda-title">Date and Venue for Next Meeting</div>
+                        <div class="agenda-description">Confirm details for the next stokvel meeting</div>
+                        <div class="agenda-time">10 mins</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="new-agenda-item">Add New Agenda Item</label>
+                <input type="text" id="new-agenda-item" placeholder="Enter new agenda item">
+            </div>
+            
+            <button class="btn" id="add-agenda">Add to Agenda</button>
+        </div>
+        
+        <div id="minutes" class="tab-content">
+            <h2>Meeting Minutes</h2>
+            
+            <div class="form-group">
+                <label for="minute-topic">Topic</label>
+                <input type="text" id="minute-topic" placeholder="Enter topic discussed">
+            </div>
+            
+            <div class="form-group">
+                <label for="minute-details">Discussion Details</label>
+                <textarea id="minute-details" placeholder="Record discussion points and decisions"></textarea>
+            </div>
+            
+            <div class="form-group">
+                <label for="minute-action">Action Items</label>
+                <textarea id="minute-action" placeholder="List action items and responsible persons"></textarea>
+            </div>
+            
+            <button class="btn" id="save-minute">Save Minute</button>
+            
+            <div class="minutes-list" id="minutes-list">
+                <!-- Minutes will be added here dynamically -->
+            </div>
+        </div>
+        
+        <div id="next-meeting" class="tab-content">
+            <h2>Next Meeting Details</h2>
+            
+            <div class="form-group">
+                <label for="next-date">Date</label>
+                <input type="date" id="next-date">
+            </div>
+            
+            <div class="form-group">
+                <label for="next-time">Time</label>
+                <input type="time" id="next-time">
+            </div>
+            
+            <div class="form-group">
+                <label for="next-location">Location</label>
+                <input type="text" id="next-location" placeholder="Enter meeting venue">
+            </div>
+            
+            <div class="form-group">
+                <label for="next-agenda">Proposed Agenda</label>
+                <textarea id="next-agenda" placeholder="Outline proposed agenda for next meeting"></textarea>
+            </div>
+            
+            <div class="action-buttons">
+                <button class="btn" id="save-next-meeting">Save Details</button>
+                <button class="btn btn-secondary" id="send-reminders">Send Reminders</button>
+            </div>
+            
+            <div id="next-meeting-display" style="margin-top: 30px; padding: 20px; background-color: #f8f9fa; border-radius: 8px;">
+                <h3>Current Next Meeting Information</h3>
+                <p><strong>Date:</strong> <span id="display-date">Not set</span></p>
+                <p><strong>Time:</strong> <span id="display-time">Not set</span></p>
+                <p><strong>Location:</strong> <span id="display-location">Not set</span></p>
+                <p><strong>Agenda:</strong> <span id="display-agenda">Not set</span></p>
+            </div>
+        </div>
+        
+        <div id="members" class="tab-content">
+            <h2>Add New Member</h2>
+            
+            <div class="form-group">
+                <label for="new-member-name">Full Name</label>
+                <input type="text" id="new-member-name" placeholder="Enter full name">
+            </div>
+            
+            <div class="form-group">
+                <label for="new-member-role">Role</label>
+                <select id="new-member-role">
+                    <option value="member">Member</option>
+                    <option value="chairperson">Chairperson</option>
+                    <option value="treasurer">Treasurer</option>
+                    <option value="secretary">Secretary</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="new-member-contribution">Monthly Contribution</label>
+                <input type="number" id="new-member-contribution" placeholder="Enter amount">
+            </div>
+            
+            <div class="form-group">
+                <label for="new-member-contact">Contact Information</label>
+                <input type="text" id="new-member-contact" placeholder="Phone number or email">
+            </div>
+            
+            <button class="btn" id="add-member">Add Member</button>
+            
+            <div id="member-confirmation" style="margin-top: 20px; padding: 15px; background-color: #e8f5e8; border-radius: 5px; display: none;">
+                <p>Member successfully added!</p>
+            </div>
+        </div>
+        
+        <footer>
+            <p>Stokvel Meeting Manager &copy; 2023 | Designed for community savings groups</p>
+        </footer>
+    </div>
+
+    <script>
+        // Tab functionality
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                // Remove active class from all tabs and contents
+                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                
+                // Add active class to clicked tab and corresponding content
+                tab.classList.add('active');
+                const tabId = tab.getAttribute('data-tab');
+                document.getElementById(tabId).classList.add('active');
+            });
+        });
+        
+        // Add new agenda item
+        document.getElementById('add-agenda').addEventListener('click', () => {
+            const newItem = document.getElementById('new-agenda-item').value;
+            if (newItem.trim() !== '') {
+                const agendaList = document.querySelector('.agenda-list');
+                const newAgendaItem = document.createElement('div');
+                newAgendaItem.className = 'agenda-item';
+                newAgendaItem.innerHTML = `
+                    <div class="agenda-checkbox">
+                        <input type="checkbox">
+                    </div>
+                    <div class="agenda-details">
+                        <div class="agenda-title">${newItem}</div>
+                        <div class="agenda-description">New agenda item</div>
+                        <div class="agenda-time">10 mins</div>
+                    </div>
+                `;
+                agendaList.appendChild(newAgendaItem);
+                document.getElementById('new-agenda-item').value = '';
+            }
+        });
+        
+        // Save minute
+        document.getElementById('save-minute').addEventListener('click', () => {
+            const topic = document.getElementById('minute-topic').value;
+            const details = document.getElementById('minute-details').value;
+            const action = document.getElementById('minute-action').value;
+            
+            if (topic.trim() !== '' && details.trim() !== '') {
+                const minutesList = document.getElementById('minutes-list');
+                const newMinute = document.createElement('div');
+                newMinute.className = 'minute-item';
+                newMinute.innerHTML = `
+                    <div class="minute-details">
+                        <div class="minute-title">${topic}</div>
+                        <div class="minute-description">${details}</div>
+                        <div class="minute-time">Action: ${action}</div>
+                    </div>
+                `;
+                minutesList.appendChild(newMinute);
+                
+                // Clear form
+                document.getElementById('minute-topic').value = '';
+                document.getElementById('minute-details').value = '';
+                document.getElementById('minute-action').value = '';
+            }
+        });
+        
+        // Save next meeting details
+        document.getElementById('save-next-meeting').addEventListener('click', () => {
+            const date = document.getElementById('next-date').value;
+            const time = document.getElementById('next-time').value;
+            const location = document.getElementById('next-location').value;
+            const agenda = document.getElementById('next-agenda').value;
+            
+            if (date && time && location) {
+                document.getElementById('display-date').textContent = formatDate(date);
+                document.getElementById('display-time').textContent = formatTime(time);
+                document.getElementById('display-location').textContent = location;
+                document.getElementById('display-agenda').textContent = agenda || 'No agenda set';
+                
+                alert('Next meeting details saved successfully!');
+            } else {
+                alert('Please fill in all required fields (date, time, location)');
+            }
+        });
+        
+        // Send reminders
+        document.getElementById('send-reminders').addEventListener('click', () => {
+            alert('Reminders sent to all members!');
+        });
+        
+        // Add new member
+        document.getElementById('add-member').addEventListener('click', () => {
+            const name = document.getElementById('new-member-name').value;
+            const role = document.getElementById('new-member-role').value;
+            const contribution = document.getElementById('new-member-contribution').value;
+            const contact = document.getElementById('new-member-contact').value;
+            
+            if (name.trim() !== '' && contribution.trim() !== '') {
+                // Show confirmation message
+                const confirmation = document.getElementById('member-confirmation');
+                confirmation.style.display = 'block';
+                
+                // Clear form
+                document.getElementById('new-member-name').value = '';
+                document.getElementById('new-member-contribution').value = '';
+                document.getElementById('new-member-contact').value = '';
+                
+                // Hide confirmation after 3 seconds
+                setTimeout(() => {
+                    confirmation.style.display = 'none';
+                }, 3000);
+            } else {
+                alert('Please fill in all required fields (name and contribution)');
+            }
+        });
+        
+        // Helper functions
+        function formatDate(dateString) {
+            const options = { year: 'numeric', month: 'long', day: 'numeric' };
+            return new Date(dateString).toLocaleDateString('en-ZA', options);
+        }
+        
+        function formatTime(timeString) {
+            return new Date(`1970-01-01T${timeString}`).toLocaleTimeString('en-ZA', { 
+                hour: '2-digit', 
+                minute: '2-digit',
+                hour12: true 
+            });
+        }
+    </script>
+</body>
+</html>
