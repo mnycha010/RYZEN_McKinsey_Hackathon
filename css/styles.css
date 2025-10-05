@@ -11732,3 +11732,299 @@ html {
     left: -2vw;
   }
 }
+
+:root {
+    /* Define colors from the design */
+    --primary-blue: #0A67E0;
+    --background-light: #F9FAFB;
+    --text-dark: #1F2937;
+    --text-medium: #4B5563;
+    --card-bg-light: #FFFFFF;
+    --progress-bar-color: #16A34A; /* A nice green for progress */
+
+    /* Data for automation (used in JS, but good to keep color logic here) */
+    --main-balance-text-color: #FFFFFF;
+}
+
+/* Base Styles */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: var(--background-light);
+    color: var(--text-dark);
+    padding: 20px;
+}
+
+.dashboard-container {
+    max-width: 450px; /* Suitable for an app-like or single-column layout */
+    margin: 0 auto;
+}
+
+/* Header */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.header h1 {
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+.group-name {
+    color: var(--text-medium);
+    font-size: 0.9rem;
+    font-weight: 400;
+}
+
+.notification-icon {
+    font-size: 1.4rem;
+    color: var(--text-medium);
+}
+
+/* Card General Styling */
+.card {
+    background-color: var(--card-bg-light);
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    margin-bottom: 20px;
+}
+/* --- Global Variables (Define these at the top if possible) --- */
+:root {
+    --primary-blue: #007bff; /* Used for the main card background */
+    --progress-bar-color: #2c3e50; /* Dark color for progress bar and icons */
+    --text-dark: #1f2937;
+    --text-medium: #6b7280;
+}
+
+/* --- Base Card Styles --- */
+.card {
+    background-color: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+}
+
+/* --- Main Balance Card --- */
+.main-balance-card {
+    background-color: var(--primary-blue);
+    color: white;
+    padding: 25px;
+    margin-bottom: 20px;
+}
+
+.main-balance-card h2 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin: 0;
+}
+
+.balance-details {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.contribution {
+    font-size: 0.85rem;
+    opacity: 0.8;
+}
+
+.contribution-amount {
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin-top: 5px;
+}
+
+.user-pct {
+    display: block; 
+    font-size: 0.8rem;
+    font-weight: 400;
+    opacity: 0.9;
+    margin-top: 5px;
+}
+
+/* --- Secondary Cards Layout (2 columns) --- */
+.secondary-cards-container {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* 2 equal columns */
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.secondary-card {
+    padding: 15px;
+}
+
+.card-content {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.card-content i {
+    font-size: 1.5rem;
+}
+
+.icon-blue { color: var(--primary-blue); }
+.icon-green { color: #00A693; } /* Use a solid green for meeting icon */
+.icon-orange { color: #F9A825; } /* Used for Payout/Clock icon */
+
+.secondary-card p {
+    font-size: 0.8rem;
+    color: var(--text-medium);
+}
+
+.card-value {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--text-dark);
+}
+
+/* --- Progress Card --- */
+.progress-card {
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.progress-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.progress-header h3 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin: 0;
+    color: var(--text-dark);
+}
+
+.progress-percentage {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--progress-bar-color);
+}
+
+.progress-bar-container {
+    background-color: #E5E7EB; /* Light grey track */
+    border-radius: 10px;
+    height: 10px;
+    overflow: hidden;
+    margin-bottom: 8px;
+}
+
+.progress-bar {
+    height: 100%;
+    background-color: var(--progress-bar-color); 
+    width: 0%; 
+    transition: width 0.5s ease-in-out;
+    border-radius: 10px;
+}
+
+.progress-amounts {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--text-medium);
+    margin-bottom: 5px;
+}
+
+.remaining {
+    font-size: 0.85rem;
+    color: var(--text-medium);
+    font-weight: 400;
+}
+
+/* --- Warning Banner (Styles added/updated) --- */
+.warning-alert {
+    background-color:rgb(255, 102, 102); /* Light yellow background */
+    border: 2px solid red; /* Orange border */
+    padding: 15px 20px;
+    margin-top: 20px;
+    box-shadow: none;
+    display: none; /* Initially hidden, controlled by JS */
+}
+
+.alert-content {
+    display: flex;
+    align-items: flex-start; /* Align icon to the top of text block */
+    gap: 15px;
+}
+
+/* New: Style for the toggle button */
+.view-details-toggle {
+    background: none;
+    border: none;
+    padding: 0;
+    font-size: 0.9rem;
+    color: BLACK; /* Darker orange color */
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 5px;
+    transition: color 0.2s;
+    display: block;
+}
+
+.view-details-toggle:hover {
+    color: Black; 
+}
+
+/* New: Styles for the dropdown list */
+.missed-members-list {
+    list-style: none;
+    padding: 0;
+    margin-top: 15px;
+    margin-bottom: 0;
+     /* Separator line */
+    padding-top: 10px;
+    /* This class controls visibility, initially hidden in JS */
+}
+
+.missed-members-list li {
+    font-size: 0.9rem;
+    padding: 5px 0;
+    color: var(--text-dark);
+    display: flex;
+    justify-content: space-between;
+}
+
+.missed-members-list li:last-child {
+    border-bottom: none;
+}
+
+.alert-content {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.alert-icon {
+    color: #F9A825; /* Warning orange icon */
+    font-size: 1.8rem;
+}
+
+.alert-text {
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: var(--text-dark);
+    margin: 0;
+}
+
+.view-details {
+    font-size: 0.9rem;
+    color: #E36D0B; 
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 3px;
+}
