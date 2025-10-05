@@ -1,0 +1,17 @@
+Django==5.2
+django-cors-headers
+django-dotenv
+django-timezone-field
+python-dotenv
+python-decouple
+dj-database-url
+psycopg2
+requests
+cryptography
+django-crispy-forms
+crispy-bootstrap5
+django-htmx
+pillow
+langchain
+langgraph
+langchain-openai
