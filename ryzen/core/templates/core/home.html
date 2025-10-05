@@ -11,7 +11,7 @@
     {% else %}
         <p>Please login or register to join a Stokvel.</p>
         <a href="{% url 'core:login' %}" class="btn btn-success me-2">Login</a>
-        <a href="{% url 'member:onboard' %}" class="btn btn-primary">Register</a>
+        {% comment %} <a href="{% url 'member:onboard' %}" class="btn btn-primary">Register</a> {% endcomment %}
     {% endif %}
 </div>
 {% endblock %}
