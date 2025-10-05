@@ -212,7 +212,7 @@
             <div class="message bot-message">
                 Hello! I'm your FAQ assistant. I can help answer questions about our services, products, policies, and more. What would you like to know?
                 <div class="suggestions">
-                    <button class="suggestion" data-question="What are your business hours?">Business hours</button>
+                    <button class="suggestion" data-question="What are your Stokvel contact hours?">Stokvel contact hours</button>
                     <button class="suggestion" data-question="How can I contact support?">Contact support</button>
                     <button class="suggestion" data-question="What payment methods do you accept?">Payment methods</button>
                 </div>
@@ -227,6 +227,25 @@
             </button>
         </div>
     </div>
+    <!-- Footer -->
+<footer class="bg-white py-4 mt-auto border-top">
+    <div class="container px-5 text-center">
+        <div class="d-flex justify-content-center gap-5">
+            <a href="index.html" class="text-primary fs-3" title="Home">
+                <i class="bi bi-house"></i>
+            </a>
+            <a href="profile.html" class="text-primary fs-3" title="Profile">
+                <i class="bi bi-person-lines-fill"></i>
+            </a>
+            <a href="dashboard.html" class="text-primary fs-3" title="Dashboard">
+                <i class="bi bi-speedometer2"></i>
+            </a>
+            <a href="chatbot.html" class="text-primary fs-3" title="Chatbox">
+                <i class="bi bi-chat-dots"></i>
+            </a>
+        </div>
+       </div>
+</footer>
 
     <script>
         // FAQ Database
@@ -240,7 +259,7 @@
                 followUp: "Would you like our emergency contact information?"
             },
             "payment methods": {
-                answer: "We accept all major credit cards (Visa, MasterCard, American Express), PayPal, and bank transfers for payments over R5000.",
+                answer: "We accept all major credit cards (Visa, MasterCard, American Express), PayPal, and bank transfers for payments over R300.",
                 followUp: "Would you like information about our payment plans?"
             },
             
@@ -391,10 +410,10 @@
                     suggestionsDiv.classList.add('suggestions');
                     
                     const suggestions = [
-                        "Business hours",
+                        "Stokvel contact hours",
                         "Contact support", 
-                        "Payment methods",
-                        "Shipping policy"
+                        "Payment methods"
+
                     ];
                     
                     suggestions.forEach(suggestion => {
