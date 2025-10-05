@@ -134,8 +134,8 @@
             </div>
 
             <button type="submit" class="btn btn-primary w-100 py-2">
-              Login <i class="bi bi-box-arrow-in-right ms-1"></i>
-            </button>
+                Login <i class="bi bi-box-arrow-in-right ms-1"></i>
+              </button>
           </form>
         </div>
       </div>
@@ -156,6 +156,21 @@
 
     <!-- Password Toggle Script -->
     <script>
+        const loginForm = document.getElementById("loginForm");
+
+        loginForm.addEventListener("submit", function (e) {
+          e.preventDefault(); // prevent default form submission
+      
+          // Check if form is valid
+          if (loginForm.checkValidity()) {
+            // Redirect to dashboard
+            window.location.href = "dashboard.html";
+          } else {
+            // Show validation errors
+            loginForm.reportValidity();
+          }
+        });
+                
       const togglePassword = document.getElementById("togglePassword");
       const password = document.getElementById("password");
       togglePassword.addEventListener("click", () => {

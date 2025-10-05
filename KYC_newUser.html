@@ -129,7 +129,7 @@
     
         <!-- Complete Button -->
         <div class="text-center">
-        <button class="btn btn-success px-5 py-2">Complete Verification</button>
+            <a href="dashboard.html" class="btn btn-success px-5 py-2">Complete Verification</a>
         </div>
     </div>
     
@@ -159,5 +159,29 @@
         });
       </script>
 
+        <script>
+    const progressBar = document.querySelector(".progress-bar");
+    const progressLabel = document.querySelector(".text-muted:last-child");
+    const stepText = document.querySelector(".d-flex span:first-child");
+    let step = 0;
+
+    document.querySelectorAll(".btn-primary").forEach((btn) => {
+        btn.addEventListener("click", () => {
+        step++;
+        if (step > 3) step = 3;
+
+        const percent = Math.round((step / 3) * 100);
+        progressBar.style.width = percent + "%";
+        progressLabel.textContent = percent + "% Complete";
+        stepText.textContent = `Step ${step} of 3`;
+
+        // Update step indicators
+        document.querySelectorAll(".badge").forEach((badge, i) => {
+            badge.classList.toggle("bg-primary", i < step);
+            badge.classList.toggle("bg-secondary", i >= step);
+        });
+        });
+    });
+    </script>
     </body>
 </html>
