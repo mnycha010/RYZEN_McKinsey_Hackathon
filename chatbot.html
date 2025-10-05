@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FAQ Chatbot</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f5f7fa;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .chat-container {
+            width: 100%;
+            max-width: 800px;
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            height: 80vh;
+        }
+
+        .chat-header {
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            position: relative;
+        }
+
+        .chat-header h1 {
+            font-size: 1.5rem;
+            margin-bottom: 5px;
+        }
+
+        .chat-header p {
+            opacity: 0.9;
+            font-size: 0.9rem;
+        }
+
+        .chat-body {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .message {
+            max-width: 80%;
+            padding: 12px 16px;
+            border-radius: 18px;
+            line-height: 1.4;
+            position: relative;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .bot-message {
+            background-color: #f0f2f5;
+            border-bottom-left-radius: 5px;
+            align-self: flex-start;
+        }
+
+        .user-message {
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            color: white;
+            border-bottom-right-radius: 5px;
+            align-self: flex-end;
+        }
+
+        .suggestions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .suggestion {
+            background-color: #e9ecef;
+            border: none;
+            border-radius: 20px;
+            padding: 8px 16px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .suggestion:hover {
+            background-color: #dde1e6;
+            transform: translateY(-2px);
+        }
+
+        .chat-footer {
+            padding: 15px 20px;
+            border-top: 1px solid #eaeaea;
+            display: flex;
+            gap: 10px;
+        }
+
+        .chat-input {
+            flex: 1;
+            padding: 12px 16px;
+            border: 1px solid #ddd;
+            border-radius: 24px;
+            outline: none;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+
+        .chat-input:focus {
+            border-color: #6a11cb;
+        }
+
+        .send-button {
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 45px;
+            height: 45px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .send-button:hover {
+            transform: scale(1.05);
+        }
+
+        .send-button svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        .typing-indicator {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            padding: 12px 16px;
+            background-color: #f0f2f5;
+            border-radius: 18px;
+            border-bottom-left-radius: 5px;
+            align-self: flex-start;
+            max-width: 80px;
+        }
+
+        .typing-dot {
+            width: 8px;
+            height: 8px;
+            background-color: #999;
+            border-radius: 50%;
+            animation: typing 1.4s infinite ease-in-out;
+        }
+
+        .typing-dot:nth-child(1) { animation-delay: -0.32s; }
+        .typing-dot:nth-child(2) { animation-delay: -0.16s; }
+
+        @keyframes typing {
+            0%, 80%, 100% { transform: scale(0.8); opacity: 0.5; }
+            40% { transform: scale(1); opacity: 1; }
+        }
+
+        .welcome-message {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #666;
+            font-style: italic;
+        }
+
+        @media (max-width: 600px) {
+            .chat-container {
+                height: 90vh;
+            }
+            
+            .message {
+                max-width: 90%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="chat-container">
+        <div class="chat-header">
+            <h1>FAQ Assistant</h1>
+            <p>How can I help you today?</p>
+        </div>
+        <div class="chat-body" id="chatBody">
+            <div class="welcome-message">
+                Welcome! I'm here to answer your frequently asked questions. Try asking me something!
+            </div>
+            <div class="message bot-message">
+                Hello! I'm your FAQ assistant. I can help answer questions about our services, products, policies, and more. What would you like to know?
+                <div class="suggestions">
+                    <button class="suggestion" data-question="What are your business hours?">Business hours</button>
+                    <button class="suggestion" data-question="How can I contact support?">Contact support</button>
+                    <button class="suggestion" data-question="What payment methods do you accept?">Payment methods</button>
+                </div>
+            </div>
+        </div>
+        <div class="chat-footer">
+            <input type="text" class="chat-input" id="userInput" placeholder="Type your question here...">
+            <button class="send-button" id="sendButton">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white">
+                    <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"></path>
+                </svg>
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // FAQ Database
+        const faqDatabase = {
+            "business hours": {
+                answer: "Our business hours are Monday to Friday, 9:00 AM to 6:00 PM EST. We are closed on weekends and major holidays.",
+                followUp: "Would you like to know about our holiday schedule?"
+            },
+            "contact support": {
+                answer: "You can contact our support team via email at support@example.com or by phone at 1-800-123-4567. Our support team is available during business hours.",
+                followUp: "Would you like our emergency contact information?"
+            },
+            "payment methods": {
+                answer: "We accept all major credit cards (Visa, MasterCard, American Express), PayPal, and bank transfers for payments over R5000.",
+                followUp: "Would you like information about our payment plans?"
+            },
+            
+            "return policy": {
+                answer: "We offer a 30-day return policy for all unused items in their original packaging. Returns are free for domestic orders.",
+                followUp: "Would you like instructions on how to initiate a return?"
+            },
+            
+            "account creation": {
+                answer: "Creating an account is simple! Just click on the 'Sign Up' button in the top right corner of our website and follow the prompts.",
+                followUp: "Would you like to know about the benefits of having an account?"
+            },
+            "password reset": {
+                answer: "If you've forgotten your password, click on 'Forgot Password' on the login page. We'll send a reset link to your registered email address.",
+                followUp: "Are you having trouble receiving the reset email?"
+            }
+        };
+
+        // DOM Elements
+        const chatBody = document.getElementById('chatBody');
+        const userInput = document.getElementById('userInput');
+        const sendButton = document.getElementById('sendButton');
+
+        // Initialize chat with welcome message
+        function initChat() {
+            // Welcome message is already in HTML
+        }
+
+        // Add message to chat
+        function addMessage(message, isUser = false) {
+            const messageDiv = document.createElement('div');
+            messageDiv.classList.add('message');
+            messageDiv.classList.add(isUser ? 'user-message' : 'bot-message');
+            messageDiv.textContent = message;
+            chatBody.appendChild(messageDiv);
+            scrollToBottom();
+        }
+
+        // Add typing indicator
+        function showTypingIndicator() {
+            const typingDiv = document.createElement('div');
+            typingDiv.classList.add('typing-indicator');
+            typingDiv.id = 'typingIndicator';
+            
+            for (let i = 0; i < 3; i++) {
+                const dot = document.createElement('div');
+                dot.classList.add('typing-dot');
+                typingDiv.appendChild(dot);
+            }
+            
+            chatBody.appendChild(typingDiv);
+            scrollToBottom();
+        }
+
+        // Remove typing indicator
+        function hideTypingIndicator() {
+            const typingIndicator = document.getElementById('typingIndicator');
+            if (typingIndicator) {
+                typingIndicator.remove();
+            }
+        }
+
+        // Scroll to bottom of chat
+        function scrollToBottom() {
+            chatBody.scrollTop = chatBody.scrollHeight;
+        }
+
+        // Find the best matching FAQ
+        function findBestMatch(question) {
+            const lowerQuestion = question.toLowerCase();
+            
+            // Direct match
+            if (faqDatabase[lowerQuestion]) {
+                return lowerQuestion;
+            }
+            
+            // Keyword matching
+            for (const key in faqDatabase) {
+                if (lowerQuestion.includes(key)) {
+                    return key;
+                }
+            }
+            
+            // If no match found
+            return null;
+        }
+
+        // Process user question
+        function processQuestion(question) {
+            addMessage(question, true);
+            
+            showTypingIndicator();
+            
+            // Simulate processing delay
+            setTimeout(() => {
+                hideTypingIndicator();
+                
+                const matchedQuestion = findBestMatch(question);
+                
+                if (matchedQuestion) {
+                    const faq = faqDatabase[matchedQuestion];
+                    addMessage(faq.answer);
+                    
+                    // Add follow-up question if available
+                    if (faq.followUp) {
+                        setTimeout(() => {
+                            showTypingIndicator();
+                            
+                            setTimeout(() => {
+                                hideTypingIndicator();
+                                addMessage(faq.followUp);
+                                
+                                // Add suggestions based on the follow-up
+                                const suggestionsDiv = document.createElement('div');
+                                suggestionsDiv.classList.add('suggestions');
+                                
+                                const yesButton = document.createElement('button');
+                                yesButton.classList.add('suggestion');
+                                yesButton.textContent = 'Yes';
+                                yesButton.onclick = function() {
+                                    processQuestion(faq.followUp);
+                                };
+                                
+                                const noButton = document.createElement('button');
+                                noButton.classList.add('suggestion');
+                                noButton.textContent = 'No, thanks';
+                                noButton.onclick = function() {
+                                    addMessage("Is there anything else I can help with?");
+                                };
+                                
+                                suggestionsDiv.appendChild(yesButton);
+                                suggestionsDiv.appendChild(noButton);
+                                
+                                // Append to the last bot message
+                                const messages = chatBody.querySelectorAll('.bot-message');
+                                const lastMessage = messages[messages.length - 1];
+                                lastMessage.appendChild(suggestionsDiv);
+                                
+                                scrollToBottom();
+                            }, 1000);
+                        }, 500);
+                    }
+                } else {
+                    addMessage("I'm sorry, I don't have an answer for that question. Please try rephrasing or ask about our business hours, contact information, payment methods, shipping, returns, warranties, or account issues.");
+                    
+                    // Add suggestions for other questions
+                    const suggestionsDiv = document.createElement('div');
+                    suggestionsDiv.classList.add('suggestions');
+                    
+                    const suggestions = [
+                        "Business hours",
+                        "Contact support", 
+                        "Payment methods",
+                        "Shipping policy"
+                    ];
+                    
+                    suggestions.forEach(suggestion => {
+                        const button = document.createElement('button');
+                        button.classList.add('suggestion');
+                        button.textContent = suggestion;
+                        button.onclick = function() {
+                            processQuestion(suggestion);
+                        };
+                        suggestionsDiv.appendChild(button);
+                    });
+                    
+                    // Append to the last bot message
+                    const messages = chatBody.querySelectorAll('.bot-message');
+                    const lastMessage = messages[messages.length - 1];
+                    lastMessage.appendChild(suggestionsDiv);
+                }
+            }, 1500);
+        }
+
+        // Event Listeners
+        sendButton.addEventListener('click', function() {
+            const question = userInput.value.trim();
+            if (question) {
+                processQuestion(question);
+                userInput.value = '';
+            }
+        });
+
+        userInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                const question = userInput.value.trim();
+                if (question) {
+                    processQuestion(question);
+                    userInput.value = '';
+                }
+            }
+        });
+
+        // Suggestion buttons event listeners
+        document.addEventListener('click', function(e) {
+            if (e.target.classList.contains('suggestion') && e.target.dataset.question) {
+                processQuestion(e.target.dataset.question);
+            }
+        });
+
+        // Initialize the chat
+        initChat();
+    </script>
+</body>
+</html>
