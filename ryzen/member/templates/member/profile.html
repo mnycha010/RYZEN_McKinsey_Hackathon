@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+
+{% block title %}Profile{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow-sm p-4">
+                <h4 class="mb-4 text-center">My Profile</h4>
+
+                <form>
+                    <!-- Full Name -->
+                    <div class="mb-3">
+                        <label for="fullName" class="form-label">Full Name</label>
+                        <input type="text" id="fullName" class="form-control" value="{{ user.get_full_name }}" disabled>
+                    </div>
+
+                    <!-- Username -->
+                    <div class="mb-3">
+                        <label for="username" class="form-label">Username</label>
+                        <input type="text" id="username" class="form-control" value="{{ user.username }}" disabled>
+                    </div>
+
+                    <!-- Email -->
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Email</label>
+                        <input type="email" id="email" class="form-control" value="{{ user.email }}" disabled>
+                    </div>
+
+                    <!-- Date Joined -->
+                    <div class="mb-3">
+                        <label for="dateJoined" class="form-label">Date Joined</label>
+                        <input type="text" id="dateJoined" class="form-control" value="{{ user.date_joined|date:'M d, Y' }}" disabled>
+                    </div>
+
+                    <!-- Stokvel -->
+                    <div class="mb-3">
+                        <label for="stokvel" class="form-label">Stokvel</label>
+                        <input type="text" id="stokvel" class="form-control" value="{{ stokvel.name }}" disabled>
+                    </div>
+
+                    <!-- Total Saved -->
+                    <div class="mb-3">
+                        <label for="totalSaved" class="form-label">Total Saved</label>
+                        <input type="text" id="totalSaved" class="form-control" value="R{{ total_saved }}" disabled>
+                    </div>
+
+                    <!-- Total Borrowed -->
+                    <div class="mb-3">
+                        <label for="totalBorrowed" class="form-label">Total Borrowed</label>
+                        <input type="text" id="totalBorrowed" class="form-control" value="R{{ total_borrowed }}" disabled>
+                    </div>
+
+                    <!-- Amount in Arrears -->
+                    <div class="mb-3">
+                        <label for="arrears" class="form-label">Amount in Arrears</label>
+                        <input type="text" id="arrears" class="form-control text-danger" value="R{{ total_arrears }}" disabled>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="py-5"></div>
+{% endblock %}

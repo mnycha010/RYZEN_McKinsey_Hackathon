@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+{% block title %}AI Analytics | {{ stokvel.name }}{% endblock %}
+{% block content %}
+<style>
+    .chat-container { display: flex; flex-direction: column; height: 80vh; border-radius: 10px; border: 1px solid #e0e0e0; background-color: #fafafa; }
+    .chat-box { flex: 1; overflow-y: auto; padding: 1rem; display: flex; flex-direction: column; gap: 0.8rem; }
+    .message { max-width: 75%; padding: 0.6rem 0.9rem; border-radius: 12px; word-wrap: break-word; }
+    .message.user { align-self: flex-end; background-color: #007bff; color: white; }
+    .message.assistant { align-self: flex-start; background-color: #e9ecef; color: #212529; }
+    .chat-input { display: flex; gap: 0.5rem; padding: 0.8rem; background: white; border-top: 1px solid #dee2e6; }
+    .chat-input input { flex: 1; border-radius: 20px; border: 1px solid #ced4da; padding: 0.6rem 1rem; }
+    .chat-input button { border-radius: 20px; padding: 0.6rem 1.2rem; }
+</style>
+
+<div class="container py-3">
+    <h5 class="fw-bold mb-3">{{ member.user.get_full_name }} | AI Analytics</h5>
+
+
+    
+    <div class="chat-container shadow-sm">
+        <div class="chat-box" id="chatBox">
+            {% if chat_history %}
+                {% for msg in chat_history %}
+                    <div class="message {{ msg.role }}">{{ msg.content }}</div>
+                {% endfor %}
+            {% else %}
+                <p class="text-muted text-center mt-5">Start the conversation by asking a question.</p>
+            {% endif %}
+        </div>
+
+        <form method="post" class="chat-input">
+            {% csrf_token %}
+            <input type="text" name="query" placeholder="Ask about contributions, members, or loans..." required autofocus>
+            <!-- Send Icon -->
+            <button type="submit" class="btn btn-primary me-1" title="Send">
+                <i class="bi bi-send-fill"></i>
+            </button>
+
+            <!-- Clear Icon -->
+            <button type="button" class="btn btn-danger" id="clear-chat-btn" title="Clear Chat">
+                <i class="bi bi-trash-fill"></i>
+            </button>
+
+        </form>
+        
+    </div>
+</div>
+
+<script>
+    // Scroll chat history to bottom on page load
+    const chatHistory = document.getElementById('chat-history');
+    chatHistory.scrollTop = chatHistory.scrollHeight;
+
+
+document.getElementById("clear-chat-btn").addEventListener("click", function() {
+    fetch("{% url 'member:ai_analytics_clear' %}", {
+        method: "POST",
+        headers: {
+            "X-CSRFToken": "{{ csrf_token }}",
+            "Content-Type": "application/json"
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if(data.status === "cleared") {
+            const chatBox = document.getElementById("chat-history");
+            if(chatBox) chatBox.innerHTML = ""; // clear the chat history visually
+            console.log("Chat cleared!");
+        } else {
+            console.error("Failed to clear chat");
+        }
+    })
+    .catch(err => console.error(err));
+});
+
+</script>
+{% endblock %}

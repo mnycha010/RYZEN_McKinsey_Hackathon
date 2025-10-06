@@ -1,0 +1,19 @@
+# Created by venv; see https://docs.python.org/3/library/venv.html
+
+# Virtual Environment
+bin/
+include/
+lib/
+lib64
+pyvenv.cfg
+
+# Django
+*.log
+*.pot
+*.pyc
+__pycache__
+db.sqlite3
+media
+
+.python-version 
+.env 
