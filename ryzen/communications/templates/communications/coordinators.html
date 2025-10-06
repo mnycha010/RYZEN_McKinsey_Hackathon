@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+
+{% block title %}Coordinator Messages | {{ stokvel.name }}{% endblock %}
+
+{% block content %}
+<div class="container py-3">
+    <h4 class="mb-3">Coordinator Communications</h4>
+
+    <!-- New Message Form -->
+    <div class="card mb-3 shadow-sm p-3">
+        <form method="POST">
+            {% csrf_token %}
+            <!-- Message input -->
+            <div class="mb-3">
+                <textarea name="message" class="form-control" rows="3" placeholder="Write your message..." required>{{ form.data.message }}</textarea>
+            </div>
+
+            <!-- Target members multi-select -->
+            <div class="mb-3">
+                <label class="form-label">Target Members</label>
+<select name="target_members" class="form-select" multiple>
+    {% for m in stokvel.members.all %}
+    <option value="{{ m.id }}"
+        {% if m.id|stringformat:"s" in selected_members %}selected{% endif %}>
+        {{ m.user.get_full_name|default:m.user.username }}
+    </option>
+    {% endfor %}
+</select>
+<small class="text-muted">Select members to send message (leave empty to send to all)</small>
+
+            </div>
+
+            <!-- Category select -->
+            <div class="mb-3">
+                <label class="form-label">Category</label>
+                <select name="category" class="form-select">
+                    {% for val, label in form.fields.category.choices %}
+                        <option value="{{ val }}" {% if form.data.category == val %}selected{% endif %}>{{ label }}</option>
+                    {% endfor %}
+                </select>
+                <small class="text-muted">Select message category</small>
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-sm">Send Message</button>
+        </form>
+    </div>
+
+    <!-- Messages List -->
+    <div class="card mb-3 shadow-sm">
+        <div class="list-group list-group-flush">
+            {% for msg in messages_page %}
+            <div class="list-group-item">
+                <div class="d-flex justify-content-between align-items-start">
+                    <strong>{{ msg.sender.get_full_name|default:msg.sender.username }}</strong>
+                    <small class="text-muted">{{ msg.created_at|date:"M d, Y H:i" }}</small>
+                </div>
+                <div class="mt-1 mb-1">
+                    {% if msg.category %}
+                        <span class="badge bg-info text-dark">{{ msg.get_category_display }}</span>
+                    {% endif %}
+                </div>
+                <p class="mb-0">{{ msg.message }}</p>
+            </div>
+            {% empty %}
+            <div class="list-group-item text-center text-muted">
+                No messages yet.
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Pagination -->
+    {% if messages_page.has_other_pages %}
+    <nav class="d-flex justify-content-center">
+        <ul class="pagination">
+            {% if messages_page.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ messages_page.previous_page_number }}">&laquo;</a>
+            </li>
+            {% endif %}
+            <li class="page-item disabled">
+                <span class="page-link">Page {{ messages_page.number }} of {{ messages_page.paginator.num_pages }}</span>
+            </li>
+            {% if messages_page.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ messages_page.next_page_number }}">&raquo;</a>
+            </li>
+            {% endif %}
+        </ul>
+    </nav>
+    {% endif %}
+</div>
+{% endblock %}

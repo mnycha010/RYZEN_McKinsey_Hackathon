@@ -1,0 +1,188 @@
+{% extends "base.html" %}
+
+{% block title %}Stokvel Meeting Management{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+
+    <!-- Header -->
+    <header style="background: linear-gradient(135deg, #2c5aa0, #1e3a8a); color: white; padding: 20px; border-radius: 10px; margin-bottom: 30px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+        <div class="d-flex justify-content-between align-items-center flex-wrap">
+            <div class="d-flex align-items-center gap-3">
+                <div>
+                    <h1 class="mb-1">Stokvel Meeting Manager</h1>
+                    <div class="subtitle" style="opacity:0.9;">Managing our collective savings and investments</div>
+                </div>
+            </div>
+            <div class="meeting-info text-start">
+                <div class="meeting-date fw-bold" style="font-size:1.3rem;">October 15, 2023</div>
+                <div class="meeting-location">Community Hall, Johannesburg</div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Agenda Tab -->
+    <div id="agenda" class="tab-content active bg-white p-4 rounded shadow-sm mb-3">
+        <h2 class="text-primary mb-3 border-bottom pb-2">Meeting Agenda</h2>
+
+        <div class="agenda-list">
+            <!-- Example Agenda Items -->
+            <div class="agenda-item d-flex mb-3 pb-2 border-bottom">
+                <div class="agenda-checkbox me-3 mt-1">
+                    <input type="checkbox" id="agenda1">
+                </div>
+                <div class="agenda-details flex-fill">
+                    <div class="agenda-title fw-semibold">Opening and Welcome</div>
+                    <div class="agenda-description text-muted">Chairperson opens the meeting and welcomes all members</div>
+                    <div class="agenda-time text-primary fw-medium" style="font-size:0.9rem;">10 mins</div>
+                </div>
+            </div>
+
+            <div class="form-group mb-3">
+                <label for="new-agenda-item" class="fw-semibold">Add New Agenda Item</label>
+                <input type="text" id="new-agenda-item" class="form-control" placeholder="Enter new agenda item">
+            </div>
+
+            <button class="btn" id="add-agenda">Add to Agenda</button>
+        </div>
+    </div>
+
+    <!-- Minutes Tab -->
+    <div id="minutes" class="tab-content bg-white p-4 rounded shadow-sm mb-3">
+        <h2 class="text-primary mb-3 border-bottom pb-2">Meeting Minutes</h2>
+
+        <div class="form-group mb-3">
+            <label for="minute-topic" class="fw-semibold">Topic</label>
+            <input type="text" id="minute-topic" class="form-control" placeholder="Enter topic discussed">
+        </div>
+
+        <div class="form-group mb-3">
+            <label for="minute-details" class="fw-semibold">Discussion Details</label>
+            <textarea id="minute-details" class="form-control" placeholder="Record discussion points and decisions"></textarea>
+        </div>
+
+        <div class="form-group mb-3">
+            <label for="minute-action" class="fw-semibold">Action Items</label>
+            <textarea id="minute-action" class="form-control" placeholder="List action items and responsible persons"></textarea>
+        </div>
+
+        <button class="btn" id="save-minute">Save Minute</button>
+
+        <div class="minutes-list mt-3" id="minutes-list"></div>
+    </div>
+
+    <!-- Next Meeting Tab -->
+    <div id="next-meeting" class="tab-content bg-white p-4 rounded shadow-sm mb-3">
+        <h2 class="text-primary mb-3 border-bottom pb-2">Next Meeting Details</h2>
+
+        <div class="form-group mb-3">
+            <label for="next-date" class="fw-semibold">Date</label>
+            <input type="date" id="next-date" class="form-control">
+        </div>
+
+        <div class="form-group mb-3">
+            <label for="next-time" class="fw-semibold">Time</label>
+            <input type="time" id="next-time" class="form-control">
+        </div>
+
+        <div class="form-group mb-3">
+            <label for="next-location" class="fw-semibold">Location</label>
+            <input type="text" id="next-location" class="form-control" placeholder="Enter meeting venue">
+        </div>
+
+        <div class="form-group mb-3">
+            <label for="next-agenda" class="fw-semibold">Proposed Agenda</label>
+            <textarea id="next-agenda" class="form-control" placeholder="Outline proposed agenda for next meeting"></textarea>
+        </div>
+
+        <div class="d-flex gap-2 mt-3">
+            <button class="btn" id="save-next-meeting">Save Details</button>
+            <button class="btn btn-secondary" id="send-reminders">Send Reminders</button>
+        </div>
+
+        <div class="mt-3 p-3 bg-light rounded" id="next-meeting-display">
+            <h5>Current Next Meeting Information</h5>
+            <p><strong>Date:</strong> <span id="display-date">Not set</span></p>
+            <p><strong>Time:</strong> <span id="display-time">Not set</span></p>
+            <p><strong>Location:</strong> <span id="display-location">Not set</span></p>
+            <p><strong>Agenda:</strong> <span id="display-agenda">Not set</span></p>
+        </div>
+    </div>
+</div>
+
+<div class="py-5"></div>
+
+<script>
+    // Tab functionality
+    document.querySelectorAll('.tab').forEach(tab => {
+        tab.addEventListener('click', () => {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            tab.classList.add('active');
+            document.getElementById(tab.dataset.tab).classList.add('active');
+        });
+    });
+
+    // Mock functionality (agenda, minutes, next meeting, members)
+    document.getElementById('add-agenda')?.addEventListener('click', () => {
+        const val = document.getElementById('new-agenda-item').value.trim();
+        if(val) {
+            const div = document.createElement('div');
+            div.className = 'agenda-item d-flex mb-3 pb-2 border-bottom';
+            div.innerHTML = `
+                <div class="agenda-checkbox me-3 mt-1"><input type="checkbox"></div>
+                <div class="agenda-details flex-fill">
+                    <div class="agenda-title fw-semibold">${val}</div>
+                    <div class="agenda-description text-muted">New agenda item</div>
+                    <div class="agenda-time text-primary fw-medium" style="font-size:0.9rem;">10 mins</div>
+                </div>
+            `;
+            document.querySelector('.agenda-list').appendChild(div);
+            document.getElementById('new-agenda-item').value = '';
+        }
+    });
+
+    document.getElementById('save-minute')?.addEventListener('click', () => {
+        const topic = document.getElementById('minute-topic').value.trim();
+        const details = document.getElementById('minute-details').value.trim();
+        const action = document.getElementById('minute-action').value.trim();
+        if(topic && details) {
+            const div = document.createElement('div');
+            div.className = 'minute-item d-flex mb-3 pb-2 border-bottom';
+            div.innerHTML = `
+                <div class="minute-details flex-fill">
+                    <div class="minute-title fw-semibold">${topic}</div>
+                    <div class="minute-description text-muted">${details}</div>
+                    <div class="minute-time text-primary fw-medium">Action: ${action || 'None'}</div>
+                </div>
+            `;
+            document.getElementById('minutes-list').appendChild(div);
+            document.getElementById('minute-topic').value = '';
+            document.getElementById('minute-details').value = '';
+            document.getElementById('minute-action').value = '';
+        }
+    });
+
+    document.getElementById('save-next-meeting')?.addEventListener('click', () => {
+        const date = document.getElementById('next-date').value;
+        const time = document.getElementById('next-time').value;
+        const location = document.getElementById('next-location').value;
+        const agenda = document.getElementById('next-agenda').value;
+        if(date && time && location){
+            document.getElementById('display-date').textContent = date;
+            document.getElementById('display-time').textContent = time;
+            document.getElementById('display-location').textContent = location;
+            document.getElementById('display-agenda').textContent = agenda || 'Not set';
+        }
+    });
+
+    document.getElementById('add-member')?.addEventListener('click', () => {
+        const confirmation = document.getElementById('member-confirmation');
+        confirmation.style.display = 'block';
+        setTimeout(() => confirmation.style.display = 'none', 3000);
+        document.getElementById('new-member-name').value = '';
+        document.getElementById('new-member-contribution').value = '';
+        document.getElementById('new-member-contact').value = '';
+    });
+</script>
+{% endblock %}

@@ -1,3 +1,5 @@
 from django.contrib import admin
+from .models import Stokvel
 
-# Register your models here.
+# Register Stokvel
+admin.site.register(Stokvel)

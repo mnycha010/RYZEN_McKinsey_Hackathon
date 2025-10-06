@@ -16,6 +16,8 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -24,5 +26,15 @@ urlpatterns = [
     path('', include('core.urls', namespace='core')),
 
     # Member app: onboarding / registration
-    path('member/', include('member.urls', namespace='member')),
+    path('', include('member.urls', namespace='member')),
+    path('', include('communications.urls', namespace='communications')),
+    # path('', include("local_ai.urls", namespace="local_ai")),
+    # ...existing code...
+    # path('', include("stokvel.urls", namespace="stokvel")),
+# ...existing code...
 ]
+
+
+if settings.DEBUG:
+    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -1,24 +1,70 @@
 {% extends "base.html" %}
 
-{% block title %}Login{% endblock %}
+{% block title %}Existing User Login | RYZEN Stokvel{% endblock %}
 
 {% block content %}
-<div class="container mt-5" style="max-width: 400px;">
-    <h2>Login</h2>
-    <form method="POST">
-        {% csrf_token %}
-        <div class="mb-3">
-            <label for="username" class="form-label">Username</label>
-            <input type="text" name="username" id="username" class="form-control" required>
+<div class="container py-5 mt-5">
+    <!-- Header (inline layout) -->
+    <div class="d-flex align-items-center justify-content-between mb-4">
+        <div class="ms-3">
+            <h2 class="fw-bold mb-1">Welcome Back</h2>
+            <p class="text-muted mb-0">Login to access your stokvel group</p>
         </div>
-        <div class="mb-3">
-            <label for="password" class="form-label">Password</label>
-            <input type="password" name="password" id="password" class="form-control" required>
+
+        <a href="{% url 'core:home' %}" class="btn btn-outline-secondary">&larr;</a>
+    </div>
+
+
+    <!-- Login Card -->
+    <div class="card shadow-sm mb-5">
+        <div class="card-body py-5 px-4">
+            <div class="text-center mb-4">
+                <i class="bi bi-person-circle fs-1 text-primary"></i>
+                <h5 class="fw-bold mt-3">Existing User Login</h5>
+                <p class="text-muted">Enter your details to access your stokvel account</p>
+            </div>
+
+            <form method="POST">
+                {% csrf_token %}
+                {{ form.as_p }}
+
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <div>
+                        <input type="checkbox" id="rememberMe" name="rememberMe" />
+                        <label for="rememberMe" class="small text-muted">Remember me</label>
+                    </div>
+                    <a href="#" class="small text-primary">Forgot password?</a>
+                </div>
+
+                <button type="submit" class="btn btn-primary w-100 py-2">
+                    Login <i class="bi bi-box-arrow-in-right ms-1"></i>
+                </button>
+            </form>
         </div>
-        <button type="submit" class="btn btn-primary">Login</button>
-    </form>
-    <p class="mt-3">
-        Don't have an account? <a href="{% url 'member:onboard' %}">Register here</a>
-    </p>
+    </div>
+
+    <!-- Footer Note -->
+    <div class="text-center">
+        <p class="small text-muted mb-0">
+            Not a member yet?
+            <a href="{% url 'member:onboard' %}" class="text-primary text-decoration-none">Join a Stokvel group</a>
+        </p>
+    </div>
 </div>
+
+<!-- Password Toggle Script -->
+<script>
+  const togglePassword = document.getElementById("togglePassword");
+  const password = document.getElementById("id_password"); // Django form field id
+  if (togglePassword && password) {
+      togglePassword.addEventListener("click", () => {
+          const type = password.getAttribute("type") === "password" ? "text" : "password";
+          password.setAttribute("type", type);
+          togglePassword.innerHTML =
+              type === "password"
+                  ? '<i class="bi bi-eye"></i>'
+                  : '<i class="bi bi-eye-slash"></i>';
+      });
+  }
+</script>
 {% endblock %}

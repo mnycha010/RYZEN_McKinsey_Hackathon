@@ -1,58 +1,34 @@
-import random
 from django.core.management.base import BaseCommand
-from django.contrib.auth.models import User
+from django.utils import timezone
 from member.models import Member, FinancialRecord
-from stokvel.models import Stokvel
+from datetime import timedelta
+import random
 
 class Command(BaseCommand):
-    help = "Creates mock users, members, stokvels, and financial records"
+    help = "Generate mock financial data for dashboard charts"
 
     def handle(self, *args, **kwargs):
-        # --- Create Stokvels ---
-        stokvels_data = [
-            {"name": "Alpha Stokvel", "monthly_contribution": 100, "target_amount": 5000},
-            {"name": "Beta Stokvel", "monthly_contribution": 150, "target_amount": 8000},
-            {"name": "Gamma Stokvel", "monthly_contribution": 200, "target_amount": 10000},
-        ]
+        members = Member.objects.all()
+        if not members.exists():
+            self.stdout.write(self.style.ERROR("No members found. Please create members first."))
+            return
 
-        stokvels = []
-        for s in stokvels_data:
-            stokvel, created = Stokvel.objects.get_or_create(
-                name=s["name"],
-                defaults={
-                    "monthly_contribution": s["monthly_contribution"],
-                    "target_amount": s["target_amount"],
-                    "admin": None,  # assign later if needed
-                }
-            )
-            stokvels.append(stokvel)
-            if created:
-                self.stdout.write(self.style.SUCCESS(f"Created stokvel: {stokvel.name}"))
+        today = timezone.now().date()
+        for member in members:
+            for month_offset in range(6, 0, -1):  # Last 6 months
+                first_day_of_month = today.replace(day=1) - timedelta(days=month_offset*30)
+                # Create 4 records per month (weekly)
+                for week in range(4):
+                    contribution_date = first_day_of_month + timedelta(days=week*7)
+                    amount_saved = random.uniform(100, 1000)
+                    amount_borrowed = random.uniform(50, 500)
 
-        # --- Create Users & Members ---
-        for i in range(1, 6):
-            username = f"user{i}"
-            email = f"user{i}@example.com"
-            password = "password123"
+                    FinancialRecord.objects.create(
+                        member=member,
+                        amount_saved=round(amount_saved, 2),
+                        amount_borrowed=round(amount_borrowed, 2),
+                        contribution_date=contribution_date,
+                        notes="Mock data for dashboard charts"
+                    )
 
-            if not User.objects.filter(username=username).exists():
-                user = User.objects.create_user(username=username, email=email, password=password)
-                stokvel = random.choice(stokvels)
-                member = Member.objects.create(
-                    user=user,
-                    phone_number=f"08200000{i}",
-                    address=f"123 Mock St, City {i}",
-                    date_of_birth="1990-01-01",
-                    stokvel=stokvel
-                )
-                stokvel.members.add(member)
-
-                FinancialRecord.objects.create(
-                    member=member,
-                    amount_saved=random.randint(100, 1000),
-                    amount_borrowed=random.randint(0, 500)
-                )
-
-                self.stdout.write(self.style.SUCCESS(f"Created user/member: {username}, joined {stokvel.name}"))
-
-        self.stdout.write(self.style.SUCCESS("✅ Mock data created successfully!"))
+        self.stdout.write(self.style.SUCCESS("Mock financial data generated for all members!"))

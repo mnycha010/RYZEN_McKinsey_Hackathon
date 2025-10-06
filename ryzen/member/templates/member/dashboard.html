@@ -1,0 +1,161 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Dashboard | {{ stokvel.name }}{% endblock %}
+
+{% block content %}
+<main class="flex-shrink-0">
+    <div class="dashboard-container">
+
+        <!-- Header -->
+        <header class="header mb-2">
+            <div>
+                <!-- Minimal spacing, only name & surname -->
+                <h1 class="mb-0" style="margin-top: 0.25rem;">{{ member.user.name|default:member.user.username }}</h1>
+                <p class="group-name">{{ stokvel.name }}</p>
+            </div>
+            <div class="notification-icon">
+                <i class="fa-regular fa-bell"></i>
+            </div>
+        </header>
+
+        <!-- Main Balance Card -->
+        <div class="card main-balance-card">
+            <p>Total Group Balance</p>
+            <div class="balance-details">
+                <h2>R{{ total_balance|floatformat:2 }}</h2>
+                <i class="fa-solid fa-arrow-trend-up text-success"></i>
+            </div>
+            <p class="contribution">Your contribution this month</p>
+            <p class="contribution-amount">R{{ member_contribution|floatformat:2 }}</p>
+        </div>
+
+        <!-- Secondary Cards -->
+        <div class="secondary-cards-container">
+            <div class="card secondary-card">
+                <div class="card-content">
+                    <i class="fa-regular fa-calendar-days icon-green"></i>
+                    <div>
+                        <p>Next Meeting</p>
+                        <p class="card-value">{{ next_meeting_date|date:"M d, Y" }}</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Replaced card: Net Borrowed / Arrears -->
+            <div class="card secondary-card">
+                <div class="card-content">
+                    <i class="fa-solid fa-money-bill-transfer icon-red"></i>
+                    <div>
+                        <p>Net Borrowed / Arrears</p>
+                        <p class="card-value">R{{ net_arrears|floatformat:2 }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Progress Card -->
+        <div class="card progress-card">
+            <div class="progress-header">
+                <h3>{{ date.today|date:"F" }} Progress</h3>
+                <span id="progress-percentage" class="progress-percentage">{{ progress_percentage }}%</span>
+            </div>
+            <div class="progress-bar-container">
+                <div class="progress-bar" style="width: {{ progress_percentage }}%;"></div>
+            </div>
+            <div class="progress-amounts">
+                <p>R{{ current_month_total|floatformat:2 }}</p>
+                <p>Target: R{{ target_amount|floatformat:2 }}</p>
+            </div>
+            {% if remaining_label == "Surplus" %}
+                <p class="remaining text-success">💰 Surplus: R{{ remaining_amount|floatformat:2 }}</p>
+            {% else %}
+                <p class="remaining text-muted">Remaining: R{{ remaining_amount|floatformat:2 }}</p>
+            {% endif %}
+        </div>
+
+        <!-- Active Members Table -->
+        <div class="card mb-4">
+            <h3 class="p-1 pb-1 mb-0 fw-semibold">Active Members</h3>
+            <div class="table-responsive">
+                <table class="table table-sm mb-0 align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Username</th>
+                            <th>Saved (R)</th>
+                            <th>Owed (R)</th>
+                            <th>Last Contribution</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in active_members_page %}
+                        <tr>
+                            <td>{{ item.member.user.username }}</td>
+                            <td>{{ item.total_saved|floatformat:2 }}</td>
+                            <td>{{ item.amount_owed|floatformat:2 }}</td>
+                            <td>{{ item.last_contribution_date|date:"M d, Y"|default:"—" }}</td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="4" class="text-center text-muted small">No active members found.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            {% if active_members_page.has_other_pages %}
+            <div class="d-flex justify-content-center py-2">
+                {% if active_members_page.has_previous %}
+                    <a href="?page={{ active_members_page.previous_page_number }}" class="btn btn-sm btn-outline-primary me-2">&larr;</a>
+                {% endif %}
+                <span class="small text-muted align-self-center">Page {{ active_members_page.number }} of {{ active_members_page.paginator.num_pages }}</span>
+                {% if active_members_page.has_next %}
+                    <a href="?page={{ active_members_page.next_page_number }}" class="btn btn-sm btn-outline-primary ms-2">&rarr;</a>
+                {% endif %}
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- Charts -->
+        <div class="card p-3 mb-4">
+            <h3 class="fw-semibold mb-3">Income vs Expense (6 Months)</h3>
+            <canvas id="incomeExpenseChart" height="150"></canvas>
+        </div>
+
+        <div class="card p-3 mb-5">
+            <h3 class="fw-semibold mb-3">Savings Growth (12 Months)</h3>
+            <canvas id="savingsGrowthChart" height="150"></canvas>
+        </div>
+
+    </div>
+</main>
+
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    // Income vs Expense
+    new Chart(document.getElementById("incomeExpenseChart"), {
+        type: "bar",
+        data: {
+            labels: {{ months|safe }},
+            datasets: [
+                { label: "Income", data: {{ income_data|safe }}, backgroundColor: "rgba(75,192,192,0.7)" },
+                { label: "Expense", data: {{ expense_data|safe }}, backgroundColor: "rgba(255,99,132,0.7)" }
+            ]
+        },
+        options: { responsive: true, plugins: { legend: { position: "top" } } }
+    });
+
+    // Savings Growth
+    new Chart(document.getElementById("savingsGrowthChart"), {
+        type: "line",
+        data: {
+            labels: {{ savings_growth_labels|safe }},
+            datasets: [
+                { label: "Total Savings", data: {{ savings_growth_data|safe }}, borderColor: "rgba(54,162,235,1)", fill: false, tension: 0.3 }
+            ]
+        },
+        options: { responsive: true, plugins: { legend: { position: "top" } } }
+    });
+</script>
+{% endblock %}

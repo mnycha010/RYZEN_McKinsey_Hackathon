@@ -41,6 +41,8 @@ INSTALLED_APPS = [
     'core',
     'member',
     'stokvel',
+    'communications',
+    # 'local_ai',
 ]
 
 MIDDLEWARE = [
@@ -118,7 +120,15 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
-STATIC_URL = 'static/'
+STATICFILES_DIRS = ['static']
+CONTENT_DELIVERY_NETWORK = "cdn"
+
+STATIC_URL = '/static/'
+STATIC_ROOT = "cdn/staticfiles"
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = "cdn/media"
+PROTECTED_MEDIA_ROOT = "cdn/protected_media"
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
