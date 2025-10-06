@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stokvel Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+</head>
+<body>
+
+    <div class="dashboard-container">
+        <header class="header">
+            <div>
+                <h1>Welcome back!</h1>
+                <p class="group-name">Prosperity Circle Stokvel</p>
+            </div>
+            <div class="notification-icon">
+                <i class="fa-regular fa-bell"></i>
+            </div>
+        </header>
+
+        <div class="card main-balance-card">
+            <p>Total Group Balance</p>
+            <div class="balance-details">
+                <h2 id="total-balance"></h2>
+                <i class="fa-solid fa-arrow-trend-up"></i>
+            </div>
+            <p class="contribution">Your contribution this month</p>
+            <p id="user-contribution" class="contribution-amount"></p>
+        </div>
+
+        <div class="secondary-cards-container">
+            <div class="card secondary-card">
+                <div class="card-content">
+                    <i class="fa-solid fa-users icon-blue"></i>
+                    <div>
+                        <p>Active Members</p>
+                        <p class="card-value" id="active-members"></p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card secondary-card">
+                <div class="card-content">
+                    <i class="fa-regular fa-calendar-days icon-green"></i>
+                    <div>
+                        <p>Next Meeting</p>
+                        <p class="card-value" id="next-meeting"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card progress-card">
+            <div class="progress-header">
+                <h3>December Progress</h3>
+                <span id="progress-percentage" class="progress-percentage"></span>
+            </div>
+            <div class="progress-bar-container">
+                <div class="progress-bar" id="progress-bar"></div>
+            </div>
+            <div class="progress-amounts">
+                <p id="current-amount"></p>
+                <p id="target-amount"></p>
+            </div>
+            <p class="remaining" id="remaining-amount"></p>
+        </div>
+    </div>
+
+    <script>
+        const currencySymbol = 'R'; // South African Rand symbol
+        
+        // Define your data here - this is what you would automate
+        const data = {
+            groupBalance: 125450,
+            userContribution: 2500,
+            activeMembers: 10,
+            totalMembers: 12,
+            nextMeeting: 'Dec 15, 2024',
+            currentProgress: 25000,
+            targetProgress: 30000
+        };
+
+        // Helper function to format currency
+        const formatCurrency = (amount) => {
+            return `${currencySymbol}${amount.toLocaleString('en-ZA')}`;
+        };
+
+        // 1. Update Main Balance Card
+        document.getElementById('total-balance').textContent = formatCurrency(data.groupBalance);
+        document.getElementById('user-contribution').textContent = formatCurrency(data.userContribution);
+
+        // 2. Update Secondary Cards
+        document.getElementById('active-members').textContent = `${data.activeMembers}/${data.totalMembers}`;
+        document.getElementById('next-meeting').textContent = data.nextMeeting;
+
+        // 3. Update Progress Card
+        const percentage = Math.round((data.currentProgress / data.targetProgress) * 100);
+        const remaining = data.targetProgress - data.currentProgress;
+
+        document.getElementById('progress-percentage').textContent = `${percentage}%`;
+        document.getElementById('current-amount').textContent = formatCurrency(data.currentProgress);
+        document.getElementById('target-amount').textContent = formatCurrency(data.targetProgress);
+        document.getElementById('remaining-amount').textContent = `${formatCurrency(remaining)} remaining`;
+
+        // Update Progress Bar width
+        document.getElementById('progress-bar').style.width = `${percentage}%`;
+    </script>
+
+</body>
+</html>
